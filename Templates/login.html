@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Cuespot Minglanilla</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="auth-page" id="authPage">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon">🎱</div>
+                <h1>Welcome Back</h1>
+                <p>Sign in to your Cuespot account</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" class="auth-form">
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email Address" required class="form-input">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" placeholder="Password" required class="form-input">
+                </div>
+                <button type="submit" class="btn btn-primary btn-auth">Sign In</button>
+            </form>
+
+            <div class="auth-footer">
+                <p class="auth-link">
+                    Don't have an account? <a href="{{ url_for('register') }}">Create one here</a>
+                </p>
+                <a href="{{ url_for('landing') }}" class="back-link">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fallback if background image fails to load
+        window.addEventListener('load', function() {
+            const authPage = document.getElementById('authPage');
+            const img = new Image();
+            img.src = "{{ url_for('static', filename='images/billiard-bg.jpg') }}";
+            img.onerror = function() {
+                authPage.classList.add('fallback-bg');
+            };
+        });
+    </script>
+</body>
+</html>

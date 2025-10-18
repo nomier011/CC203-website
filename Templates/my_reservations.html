@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reservations - Cuespot Minglanilla</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="reservations-page">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">🎱 Cuespot</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('tables') }}" class="nav-link">Book Table</a>
+                <a href="{{ url_for('my_reservations') }}" class="nav-link active">My Reservations</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Reservations Section -->
+    <section class="reservations-section">
+        <div class="container">
+            <h2>My Reservations</h2>
+
+            {% if reservations %}
+            <div class="reservations-list">
+                {% for reservation in reservations %}
+                <div class="reservation-card {{ reservation.status }} {{ reservation.payment_status }}">
+                    <div class="reservation-header">
+                        <h3>{{ reservation.table_type|upper }} Table</h3>
+                        <div class="status-badges">
+                            <span class="status-badge {{ reservation.status }}">
+                                {{ reservation.status|title }}
+                            </span>
+                            {% if reservation.payment_status %}
+                            <span class="payment-badge {{ reservation.payment_status }}">
+                                {{ reservation.payment_status|title }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="reservation-details">
+                        <p><strong>Date:</strong> {{ reservation.reservation_date }}</p>
+                        <p><strong>Time:</strong> {{ reservation.reservation_time }}</p>
+                        <p><strong>Duration:</strong> {{ reservation.duration }} hour(s)</p>
+                        <p><strong>Total:</strong> ₱{{ reservation.total_price }}</p>
+                        {% if reservation.payment_method %}
+                        <p><strong>Payment Method:</strong> {{ reservation.payment_method }}</p>
+                        {% endif %}
+                        {% if reservation.payment_reference %}
+                        <p><strong>Reference:</strong> {{ reservation.payment_reference }}</p>
+                        {% endif %}
+                        <p><strong>Booked on:</strong> {{ reservation.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                    </div>
+                </div> <!-- This closes the reservation-card div -->
+                {% endfor %}
+            </div> <!-- This closes the reservations-list div -->
+            {% else %}
+            <div class="no-reservations">
+                <h3>No reservations yet</h3>
+                <p>Book your first table and start playing!</p>
+                <a href="{{ url_for('tables') }}" class="btn btn-primary">Book a Table</a>
+            </div>
+            {% endif %}
+        </div> <!-- This closes the container div -->
+    </section> <!-- This closes the section -->
+</body>
+</html>

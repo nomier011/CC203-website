@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Table - Cuespot Minglanilla</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="tables-page">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">🎱 Cuespot</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('tables') }}" class="nav-link active">Book Table</a>
+                <a href="{{ url_for('my_reservations') }}" class="nav-link">My Reservations</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Reservation Section -->
+    <section class="reservation-section">
+        <div class="container">
+            <h2>Book Your Table</h2>
+            <p>Choose between our premium VIP tables or standard regular tables</p>
+
+            <form class="reservation-form" action="{{ url_for('book_table') }}" method="POST">
+                <!-- Table Selection -->
+                <div class="form-group">
+                    <h3>Table Type</h3>
+                    <div class="table-options">
+                        <div class="table-option" data-type="regular">
+                            <div class="table-icon">🎱</div>
+                            <h4>Regular Table</h4>
+                            <p class="price">₱200/hour</p>
+                            <ul>
+                                <li>Standard size pool table</li>
+                                <li>Comfortable seating</li>
+                                <li>Basic lighting</li>
+                                <li>Perfect for casual play</li>
+                            </ul>
+                        </div>
+
+                        <div class="table-option" data-type="vip">
+                            <div class="table-icon">⭐</div>
+                            <h4>VIP Table</h4>
+                            <p class="price">₱400/hour</p>
+                            <ul>
+                                <li>Tournament-grade table</li>
+                                <li>Premium leather seating</li>
+                                <li>Enhanced lighting</li>
+                                <li>Private area</li>
+                                <li>Priority service</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <input type="hidden" name="table_type" id="table-type-input" required>
+                </div>
+
+                <!-- Date & Time -->
+                <div class="form-group">
+                    <h3>Date & Time</h3>
+                    <div class="input-group">
+                        <input type="date" name="reservation_date" id="reservation-date" required>
+                        <input type="time" name="reservation_time" id="reservation-time" required>
+                    </div>
+                </div>
+
+                <!-- Duration -->
+                <div class="form-group">
+                    <h3>Duration</h3>
+                    <select name="duration" id="duration" required>
+                        <option value="">Select hours</option>
+                        <option value="1">1 hour</option>
+                        <option value="2">2 hours</option>
+                        <option value="3">3 hours</option>
+                        <option value="4">4 hours</option>
+                    </select>
+                </div>
+
+                <!-- Summary -->
+                <div class="summary">
+                    <h3>Booking Summary</h3>
+                    <div class="summary-details">
+                        <p>Table Type: <span id="summary-type">Not selected</span></p>
+                        <p>Duration: <span id="summary-duration">0 hours</span></p>
+                        <p class="total">Total: ₱<span id="summary-total">0</span></p>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-submit">Proceed to Payment</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        // Table selection functionality
+        document.querySelectorAll('.table-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.table-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                const tableType = this.getAttribute('data-type');
+                document.getElementById('table-type-input').value = tableType;
+                document.getElementById('summary-type').textContent =
+                    tableType.charAt(0).toUpperCase() + tableType.slice(1) + ' Table';
+                updateTotal();
+            });
+        });
+
+        document.getElementById('duration').addEventListener('change', updateTotal);
+
+        function updateTotal() {
+            const activeTable = document.querySelector('.table-option.active');
+            if (activeTable) {
+                const tablePrice = activeTable.getAttribute('data-type') === 'vip' ? 400 : 200;
+                const hours = parseInt(document.getElementById('duration').value) || 0;
+                const total = tablePrice * hours;
+                document.getElementById('summary-total').textContent = total;
+                document.getElementById('summary-duration').textContent = hours + ' hour' + (hours !== 1 ? 's' : '');
+            }
+        }
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('reservation-date').min = today;
+    </script>
+</body>
+</html>

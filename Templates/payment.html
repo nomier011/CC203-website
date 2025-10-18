@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Cuespot Minglanilla</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="payment-page">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">🎱 Cuespot</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('tables') }}" class="nav-link">Book Table</a>
+                <a href="{{ url_for('my_reservations') }}" class="nav-link">My Reservations</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Payment Section -->
+    <section class="payment-section">
+        <div class="container">
+            <h2>Complete Your Payment</h2>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-card">
+                    <p><strong>Table Type:</strong> {{ reservation.table_type|upper }} Table</p>
+                    <p><strong>Date:</strong> {{ reservation.reservation_date }}</p>
+                    <p><strong>Time:</strong> {{ reservation.reservation_time }}</p>
+                    <p><strong>Duration:</strong> {{ reservation.duration }} hour(s)</p>
+                    <p class="total-amount"><strong>Total Amount:</strong> ₱{{ reservation.total_price }}</p>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="payment-methods">
+                <h3>Select Payment Method</h3>
+                <form action="{{ url_for('process_payment') }}" method="POST" class="payment-form">
+
+                    <!-- E-Wallet Options -->
+                    <div class="payment-category">
+                        <h4>💳 E-Wallet</h4>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="GCash" required>
+                                <div class="payment-card">
+                                    <div class="payment-icon">📱</div>
+                                    <div class="payment-info">
+                                        <h5>GCash</h5>
+                                        <p>Pay using GCash mobile app</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="Maya" required>
+                                <div class="payment-card">
+                                    <div class="payment-icon">💜</div>
+                                    <div class="payment-info">
+                                        <h5>Maya</h5>
+                                        <p>Pay using Maya wallet</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="GrabPay" required>
+                                <div class="payment-card">
+                                    <div class="payment-icon">🚗</div>
+                                    <div class="payment-info">
+                                        <h5>GrabPay</h5>
+                                        <p>Pay using GrabPay wallet</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Bank Transfer Options -->
+                    <div class="payment-category">
+                        <h4>🏦 Bank Transfer</h4>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="BDO" required>
+                                <div class="payment-card">
+                                    <div class="payment-icon">🔵</div>
+                                    <div class="payment-info">
+                                        <h5>BDO</h5>
+                                        <p>BDO Online Banking</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="BPI" required>
+                                <div class="payment-card">
+                                    <div class="payment-icon">🔴</div>
+                                    <div class="payment-info">
+                                        <h5>BPI</h5>
+                                        <p>BPI Online Banking</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="Metrobank" required>
+                                <div class="payment-card">
+                                    <div class="payment-icon">🟢</div>
+                                    <div class="payment-info">
+                                        <h5>Metrobank</h5>
+                                        <p>Metrobank Online</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="UnionBank" required>
+                                <div class="payment-card">
+                                    <div class="payment-icon">🟡</div>
+                                    <div class="payment-info">
+                                        <h5>UnionBank</h5>
+                                        <p>UnionBank Online</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Cash Payment -->
+                    <div class="payment-category">
+                        <h4>💵 Other Options</h4>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="Cash" required>
+                                <div class="payment-card">
+                                    <div class="payment-icon">💰</div>
+                                    <div class="payment-info">
+                                        <h5>Cash Payment</h5>
+                                        <p>Pay in cash at the venue</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-pay">Pay Now - ₱{{ reservation.total_price }}</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

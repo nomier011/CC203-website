@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Cuespot Minglanilla</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="auth-page" id="authPage">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon">🎱</div>
+                <h1>Join Cuespot</h1>
+                <p>Create your account and start playing!</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Registration Form -->
+            <form method="POST" class="auth-form">
+    {{ form.hidden_tag() }}
+    {{ form.username(class="form-input", placeholder="Username") }}
+    {{ form.email(class="form-input", placeholder="Email") }}
+    {{ form.phone(class="form-input", placeholder="Phone") }}
+    {{ form.password(class="form-input", placeholder="Password") }}
+    {{ form.submit(class="btn btn-primary btn-auth") }}
+</form>
+
+
+            <div class="auth-footer">
+                <p class="auth-link">
+                    Already have an account? <a href="{{ url_for('login') }}">Sign In</a>
+                </p>
+                <a href="{{ url_for('landing') }}" class="back-link">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fallback background image
+        window.addEventListener('load', function () {
+            const authPage = document.getElementById('authPage');
+            const img = new Image();
+            img.src = "{{ url_for('static', filename='images/billiard-bg.jpg') }}";
+            img.onerror = function () {
+                authPage.classList.add('fallback-bg');
+            };
+        });
+    </script>
+</body>
+</html>

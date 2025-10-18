@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Cuespot Minglanilla</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="home-page">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">🎱 Cuespot</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link active">Home</a>
+                <a href="{{ url_for('tables') }}" class="nav-link">Book Table</a>
+                <a href="{{ url_for('my_reservations') }}" class="nav-link">My Reservations</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-home">
+        <div class="hero-content">
+            <h1>Welcome back, {{ username }}! 👋</h1>
+            <p>Ready for some billiards? Book your table now and enjoy premium gaming experience.</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('tables') }}" class="btn btn-primary">Book a Table</a>
+                <a href="{{ url_for('my_reservations') }}" class="btn btn-secondary">View My Reservations</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2>Why Choose Cuespot?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>VIP Tables</h3>
+                    <p>Premium tournament-grade tables with enhanced lighting and private areas</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Regular Tables</h3>
+                    <p>Quality tables perfect for casual play with friends and family</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💳</div>
+                    <h3>Easy Payment</h3>
+                    <p>Multiple payment options including GCash, Maya, and bank transfers</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🕒</div>
+                    <h3>Flexible Hours</h3>
+                    <p>Open daily with extended hours for your convenience</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

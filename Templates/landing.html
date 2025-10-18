@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuespot Minglanilla - Premium Billiard Hall</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="landing-page" id="landingPage">
+    <div class="landing-container">
+        <div class="landing-content">
+            <div class="logo-section">
+                <div class="main-logo">🎱</div>
+                <h1>Cuespot Minglanilla</h1>
+                <p class="tagline">Where Every Shot Tells a Story</p>
+            </div>
+
+            <p class="description">Experience premium billiards with VIP & Regular tables, professional equipment, and the perfect atmosphere for players of all levels.</p>
+
+            <div class="auth-buttons">
+                <a href="{{ url_for('login') }}" class="btn btn-login">Sign In</a>
+                <a href="{{ url_for('register') }}" class="btn btn-register">Join Now</a>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">⭐</span>
+                    <h3>VIP Experience</h3>
+                    <p>Tournament-grade tables in private areas</p>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🎯</span>
+                    <h3>Casual Play</h3>
+                    <p>Quality tables for friendly matches</p>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">💳</span>
+                    <h3>Easy Booking</h3>
+                    <p>Reserve and pay seamlessly online</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fallback if background image fails to load
+        window.addEventListener('load', function() {
+            const landingPage = document.getElementById('landingPage');
+            const img = new Image();
+            img.src = "{{ url_for('static', filename='images/billiard-bg.jpg') }}";
+            img.onerror = function() {
+                landingPage.style.background = 'linear-gradient(135deg, #1e3a2c 0%, #35654d 50%, #4a7c59 100%)';
+            };
+        });
+    </script>
+</body>
+</html>

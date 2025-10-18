@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservations - Cuespot Minglanilla</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Reservation Management</h1>
+        <a href="{{ url_for('home') }}" class="btn">Back to Home</a>
+
+        <div class="reservations-list">
+            {% for reservation in reservations %}
+            <div class="reservation-card">
+                <h3>{{ reservation.customer_name }}</h3>
+                <p><strong>Phone:</strong> {{ reservation.phone }}</p>
+                <p><strong>Email:</strong> {{ reservation.email }}</p>
+                <p><strong>Table Type:</strong> {{ reservation.table_type|upper }}</p>
+                <p><strong>Date:</strong> {{ reservation.reservation_date }} at {{ reservation.reservation_time }}</p>
+                <p><strong>Duration:</strong> {{ reservation.duration }} hour(s)</p>
+                <p><strong>Total:</strong> ₱{{ reservation.total_price }}</p>
+                <p><strong>Booked on:</strong> {{ reservation.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+            </div>
+            {% else %}
+            <p>No reservations found.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

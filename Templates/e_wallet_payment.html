@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Wallet Payment - Cuespot Minglanilla</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="e-wallet-page">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">🎱 Cuespot</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('my_reservations') }}" class="nav-link">My Reservations</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- E-Wallet Payment Section -->
+    <section class="e-wallet-section">
+        <div class="container">
+            <div class="payment-flow">
+                <!-- Step 1: QR Code -->
+                <div class="payment-step active" id="step1">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <h2>Scan QR Code to Pay</h2>
+                    </div>
+
+                    <div class="payment-instructions">
+                        <div class="instruction-card">
+                            <h3>Payment Details</h3>
+                            <div class="payment-details">
+                                <p><strong>Amount:</strong> ₱{{ reservation.total_price }}</p>
+                                <p><strong>Reference No:</strong> {{ reference }}</p>
+                                <p><strong>Merchant:</strong> Cuespot Minglanilla</p>
+                                <p><strong>Mobile No:</strong> {{ reservation.mobile_number }}</p>
+                            </div>
+                        </div>
+
+                        <div class="qr-container">
+                            <h3>Scan this QR Code with your {{ reservation.payment_method }} app</h3>
+                            <div class="qr-code">
+                                <img src="data:image/png;base64,{{ qr_code_b64 }}" alt="QR Code for Payment">
+                            </div>
+                            <p class="qr-note">Or manually enter reference: <strong>{{ reference }}</strong></p>
+                        </div>
+
+                        <div class="instruction-steps">
+                            <h4>How to Pay:</h4>
+                            <ol>
+                                <li>Open your {{ reservation.payment_method }} app</li>
+                                <li>Tap "Scan to Pay" or "QR Code"</li>
+                                <li>Scan the QR code above</li>
+                                <li>Verify amount: <strong>₱{{ reservation.total_price }}</strong></li>
+                                <li>Enter your MPIN to complete payment</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-primary" onclick="showStep(2)">
+                            I've Completed Payment
+                        </button>
+                        <a href="{{ url_for('payment') }}" class="btn btn-secondary">Change Payment Method</a>
+                    </div>
+                </div>
+
+                <!-- Step 2: Confirmation -->
+                <div class="payment-step" id="step2">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <h2>Confirm Your Payment</h2>
+                    </div>
+
+                    <div class="confirmation-content">
+                        <div class="confirmation-icon">⏳</div>
+                        <h3>Payment Verification</h3>
+                        <p>We are verifying your payment. This may take a few moments.</p>
+
+                        <div class="payment-status">
+                            <div class="status-indicator">
+                                <div class="status-dot processing"></div>
+                                <span>Processing Payment</span>
+                            </div>
+                        </div>
+
+                        <div class="payment-summary">
+                            <h4>Payment Summary</h4>
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <span>Amount:</span>
+                                    <strong>₱{{ reservation.total_price }}</strong>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Reference:</span>
+                                    <strong>{{ reference }}</strong>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Method:</span>
+                                    <strong>{{ reservation.payment_method }}</strong>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Mobile:</span>
+                                    <strong>{{ reservation.mobile_number }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-primary" id="verifyPayment">
+                            Check Payment Status
+                        </button>
+                        <button class="btn btn-secondary" onclick="showStep(1)">
+                            Back to QR Code
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Success -->
+                <div class="payment-step" id="step3">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <h2>Payment Successful!</h2>
+                    </div>
+
+                    <div class="success-content">
+                        <div class="success-icon">✅</div>
+                        <h3>Thank You for Your Payment!</h3>
+                        <p>Your table reservation has been confirmed.</p>
+
+                        <div class="success-details">
+                            <div class="detail-card">
+                                <h4>Reservation Details</h4>
+                                <p><strong>Table:</strong> {{ reservation.table_type|upper }} Table</p>
+                                <p><strong>Date:</strong> {{ reservation.reservation_date }}</p>
+                                <p><strong>Time:</strong> {{ reservation.reservation_time }}</p>
+                                <p><strong>Duration:</strong> {{ reservation.duration }} hours</p>
+                                <p><strong>Total Paid:</strong> ₱{{ reservation.total_price }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <a href="{{ url_for('my_reservations') }}" class="btn btn-primary">
+                            View My Reservations
+                        </a>
+                        <a href="{{ url_for('home') }}" class="btn btn-secondary">
+                            Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let currentStep = 1;
+
+        function showStep(step) {
+            document.querySelectorAll('.payment-step').forEach(s => {
+                s.classList.remove('active');
+            });
+            document.getElementById(`step${step}`).classList.add('active');
+            currentStep = step;
+        }
+
+        document.getElementById('verifyPayment').addEventListener('click', function() {
+            const button = this;
+            const originalText = button.textContent;
+
+            button.textContent = 'Checking...';
+            button.disabled = true;
+
+            // Simulate API call to check payment status
+            fetch(`{{ url_for('check_payment_status', reference=reference) }}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.paid) {
+                        // Mark as paid and show success
+                        fetch(`{{ url_for('confirm_payment', reference=reference) }}`, {
+                            method: 'POST'
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.success) {
+                                showStep(3);
+                            }
+                        });
+                    } else {
+                        alert('Payment not yet received. Please try again in a few moments.');
+                    }
+                })
+                .catch(error => {
+                    alert('Error checking payment status. Please try again.');
+                })
+                .finally(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                });
+        });
+
+        // Auto-check payment status every 10 seconds when on step 2
+        setInterval(() => {
+            if (currentStep === 2) {
+                fetch(`{{ url_for('check_payment_status', reference=reference) }}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.paid) {
+                            showStep(3);
+                        }
+                    });
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
