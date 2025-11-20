@@ -6,6 +6,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TelField
 from wtforms.validators import DataRequired, Email, Length, Optional
 from datetime import datetime
+import email_validator
+
 
 # ------------------------------
 # CONFIGURATION
@@ -221,4 +223,5 @@ def my_reservations():
 # ------------------------------
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
